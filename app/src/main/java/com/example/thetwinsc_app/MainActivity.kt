@@ -2,49 +2,42 @@ package com.example.thetwinsc_app
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.Toast
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var toggle: ActionBarDrawerToggle
+    lateinit var bottomNav:BottomNavigationView
+    lateinit var navController:NavController
+    lateinit var drawerLayout: DrawerLayout
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_menu)
-
-        val drawer = findViewById<DrawerLayout>(R.id.drawerLayout)
-        val navView = findViewById<NavigationView>(R.id.nav_View)
-        val topBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        setContentView(R.layout.activity_main)
 
 
-        topBar.setNavigationOnClickListener {
-            toggle = ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close)
-            drawer.addDrawerListener(toggle)
-            toggle.syncState()
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        bottomNav = bottom_navigation
 
-        }
-
-        navView.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.nav_Anvil -> Toast.makeText(applicationContext, "AAAAAAAAAAAAAAAAAAA", Toast.LENGTH_LONG).show()
-            }
-            true
-        }
+        navController = findNavController(R.id.hostFragment)
+        setupBottomNavigation()
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(toggle.onOptionsItemSelected(item)){
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+    override fun onSupportNavigateUp(): Boolean {
+        //return navController.navigateUp()
+        return NavigationUI.navigateUp(navController,appBarConfiguration)
+
     }
 
+    private fun setupBottomNavigation() {
+        bottomNav.setupWithNavController(navController)
+    }
 }
